@@ -10,22 +10,15 @@ import { APP_GUARD } from '@nestjs/core';
     MongooseModule.forRoot('mongodb://localhost:27017'),
     UsersModule,
     PostsModule,
-  ],
-  controllers: [],
-  providers: [],
-})
-@Module({
-  imports: [
     ThrottlerModule.forRoot([{
       ttl: 60000,
       limit: 10,
     }]),
   ],
-  providers:[
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
+  controllers: [],
+  providers: [{
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard,
+  },],
 })
 export class AppModule {}
