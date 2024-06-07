@@ -23,6 +23,7 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   createUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
+    throw new Error ('random')
     return this.usersService.createUser(createUserDto);
   }
 
