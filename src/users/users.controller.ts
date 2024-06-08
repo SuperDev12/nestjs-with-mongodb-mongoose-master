@@ -13,47 +13,29 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
-import mongoose from 'mongoose';
+import { UserResponseDto } from './dto/UserResponse.dto';
+
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
   @UsePipes(new ValidationPipe())
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    try {
-      console.log(createUserDto);
-      return await this.usersService.createUser(createUserDto);
-    } catch (error) {
-      throw new HttpException('Random error', 500);
-    }
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    return this.usersService.createUser(createUserDto);
   }
 
   @Get()
-  async getUsers() {
-    try {
-      return await this.usersService.getsUsers();
-    } catch (error) {
-      throw new HttpException('Random error', 500);
-    }
+  async getUsers(): Promise<UserResponseDto[]> {
+    return this.usersService.getsUsers();
   }
 
   @Get(':username')
-  async getUserByUsername(@Param('username') username: string) {
-    try {
-      if (typeof username !== 'string') {
-        throw new HttpException('Random error', 400);
-      }
-
-      const findUser = await this.usersService.getUserByUsername(username);
-      if (!findUser) {
-        throw new HttpException('Random error', 404);
-      }
-
-      return findUser;
-    } catch (error) {
-      throw new HttpException('Random error', 500);
+  async getUserByUsername(@Param('username') username: string): Promise<UserResponseDto> {
+    if (typeof username !== 'string') {
+      throw new HttpException('Random error', 400);
     }
+    return this.usersService.getUserByUsername(username);
   }
 
   @Patch(':id')
@@ -61,28 +43,12 @@ export class UsersController {
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
-    try {
-      const isValid = mongoose.Types.ObjectId.isValid(id);
-      if (!isValid) throw new HttpException('Random error', 400);
-      const updatedUser = await this.usersService.updateUser(id, updateUserDto);
-      if (!updatedUser) throw new HttpException('Random error', 404);
-      return updatedUser;
-    } catch (error) {
-      throw new HttpException('Random error', 500);
-    }
+  ): Promise<UserResponseDto> {
+    return this.usersService.updateUser(id, updateUserDto);
   }
 
   @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
-    try {
-      const isValid = mongoose.Types.ObjectId.isValid(id);
-      if (!isValid) throw new HttpException('Random error', 400);
-      const deletedUser = await this.usersService.deleteUser(id);
-      if (!deletedUser) throw new HttpException('Random error', 404);
-      return;
-    } catch (error) {
-      throw new HttpException('Random error', 500);
-    }
+  async deleteUser(@Param('id') id: string): Promise<void> {
+    return this.usersService.deleteUser(id);
   }
 }

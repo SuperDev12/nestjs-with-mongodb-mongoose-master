@@ -10,6 +10,8 @@ export class UserSettings {
 
   @Prop({ required: false })
   receiveSMS?: boolean;
+    theme: string;
+    notifications: boolean;
 }
 
 export const UserSettingsSchema = SchemaFactory.createForClass(UserSettings);
