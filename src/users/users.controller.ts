@@ -1,54 +1,33 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UsePipes,
-  ValidationPipe,
-  Get,
-  Param,
-  HttpException,
-  Patch,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/CreateUser.dto';
-import { UpdateUserDto } from './dto/UpdateUser.dto';
-import { UserResponseDto } from './dto/UserResponse.dto';
+import { User } from './users.entity';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
-
-  @Post()
-  @UsePipes(new ValidationPipe())
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    return this.usersService.createUser(createUserDto);
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async getUsers(): Promise<UserResponseDto[]> {
-    return this.usersService.getsUsers();
+  async findAll(): Promise<User[]> {
+    return this.usersService.findAll();
   }
 
-  @Get(':username')
-  async getUserByUsername(@Param('username') username: string): Promise<UserResponseDto> {
-    if (typeof username !== 'string') {
-      throw new HttpException('Random error', 400);
-    }
-    return this.usersService.getUserByUsername(username);
+  @Post()
+  async create(@Body() user: User): Promise<User> {
+    return this.usersService.create(user);
   }
 
-  @Patch(':id')
-  @UsePipes(new ValidationPipe())
-  async updateUser(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserResponseDto> {
-    return this.usersService.updateUser(id, updateUserDto);
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<User> {
+    return this.usersService.findOne(id);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() user: User): Promise<[number, User[]]> {
+    return this.usersService.update(id, user);
   }
 
   @Delete(':id')
-  async deleteUser(@Param('id') id: string): Promise<void> {
-    return this.usersService.deleteUser(id);
+  async delete(@Param('id') id: string): Promise<void> {
+    return this.usersService.delete(id);
   }
 }

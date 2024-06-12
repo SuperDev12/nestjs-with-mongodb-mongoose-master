@@ -1,29 +1,36 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Post } from 'src/schemas/Post.schema';
-import { CreatePostDto } from './dtos/CreatePost.dto';
-import { User } from 'src/schemas/User.schema';
+import { Injectable, Inject } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { Post } from './post.entity';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectModel(Post.name) private postModel: Model<Post>,
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Post)
+    private readonly postModel: typeof Post,
   ) {}
 
-  async createPost({ userId, ...createPostDto }: CreatePostDto) {
-    const findUser = await this.userModel.findById(userId);
-    if (!findUser) throw new HttpException('User Not Found', 404);
-    const newPost = new this.postModel({ ...createPostDto, user: userId });
-    const savedPost = await newPost.save();
-    await findUser.updateOne({
-      $push: {
-        posts: savedPost._id,
-      },
-    });
-    return savedPost;
+  async findAll(): Promise<Post[]> {
+    return this.postModel.findAll();
   }
 
-  findPostById() {}
+  async create(post: Post): Promise<Post> {
+    return this.postModel.create(post);
+  }
+
+  async findOne(id: string): Promise<Post> {
+    return this.postModel.findOne({ where: { id } });
+  }
+
+  async update(id: string, post: Post): Promise<[number, Post[]]> {
+    const [numberOfAffectedRows, affectedRows] = await this.postModel.update(post, {
+      where: { id },
+      returning: true,
+    });
+    return [numberOfAffectedRows, affectedRows as unknown as Post[]]; // Adjust the type here if necessary
+  }
+
+  async delete(id: string): Promise<void> {
+    const post = await this.findOne(id);
+    await post.destroy();
+  }
 }
