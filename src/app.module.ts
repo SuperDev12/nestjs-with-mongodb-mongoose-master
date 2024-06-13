@@ -1,12 +1,18 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { DatabaseModule } from './database/database.module';
+import { ValidateHeaderMiddleware } from './common/validate-header.middleware';
+import { UsersController } from './users/users.controller'; // Ensure this path is correct
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 
 @Module({
   imports: [
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== 'production',
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -24,5 +30,13 @@ import { DatabaseModule } from './database/database.module';
     PostsModule,
     DatabaseModule,
   ],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ValidateHeaderMiddleware)
+      .forRoutes('*'); // Apply middleware to UsersController
+  }
+}

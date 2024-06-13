@@ -11,7 +11,7 @@ import {
     catch(exception: unknown, host: ArgumentsHost) {
       const ctx = host.switchToHttp();
       const response = ctx.getResponse();
-      console.log(response)
+      console.log (exception)
       const status =
         exception instanceof HttpException
           ? exception.getStatus()
