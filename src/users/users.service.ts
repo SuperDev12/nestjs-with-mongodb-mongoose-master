@@ -1,21 +1,10 @@
-import { Injectable, Inject, Body, BadRequestException, NestMiddleware } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/CreateUser.dto';
-import { NextFunction } from 'express';
 
 @Injectable()
-export class ValidateHeaderMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
-    if (!req.headers['custom-header']) {
-      throw new BadRequestException('Missing custom header');
-    }
-    next();
-  }
-}
-
 export class UsersService {
-  [x: string]: any;
   constructor(
     @InjectModel(User)
     private readonly userModel: typeof User,
@@ -25,7 +14,7 @@ export class UsersService {
     return await this.userModel.findAll();
   }
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     return this.userModel.create(createUserDto);
   }
 
