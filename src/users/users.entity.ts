@@ -1,4 +1,4 @@
-import { Table, Column, Model, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, HasMany, HasOne } from 'sequelize-typescript';
 import { Post } from '../posts/post.entity';
 
 @Table
@@ -9,6 +9,7 @@ export class User extends Model<User> {
   @Column
   password: string;
 
-  @HasMany(() => Post)
+  @HasOne(() => Post)
   posts: Post[];
+  profile: any;
 }

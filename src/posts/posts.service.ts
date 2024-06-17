@@ -26,7 +26,7 @@ export class PostsService {
       where: { id },
       returning: true,
     });
-    return [numberOfAffectedRows, affectedRows as unknown as Post[]]; // Adjust the type here if necessary
+    return [numberOfAffectedRows, affectedRows as unknown as Post[]]; 
   }
 
   async delete(id: string): Promise<void> {

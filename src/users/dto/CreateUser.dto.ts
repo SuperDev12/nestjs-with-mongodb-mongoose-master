@@ -35,3 +35,6 @@ export class CreateUserDto {
   @Type(() => CreateUserSettingsDto)
   settings?: CreateUserSettingsDto;
 }
+export class CreateUserProfileDto {
+  readonly bio: string;
+}

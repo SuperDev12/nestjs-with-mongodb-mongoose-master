@@ -5,7 +5,6 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { DatabaseModule } from './database/database.module';
 import { ValidateHeaderMiddleware } from './common/validate-header.middleware';
-import { UsersController } from './users/users.controller'; // Ensure this path is correct
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 
 @Module({

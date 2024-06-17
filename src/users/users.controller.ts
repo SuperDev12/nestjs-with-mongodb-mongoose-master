@@ -14,7 +14,6 @@ export class UsersController {
 
   @Post()
   async create(@Body() user: CreateUserDto): Promise<User> {
-    console.log('dsjfg')
     return this.usersService.createUser(user);
   }
 
