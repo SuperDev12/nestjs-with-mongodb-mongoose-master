@@ -1,4 +1,3 @@
-// src/users/user.model.ts
 // import { Table, Column, Model, HasOne, ForeignKey, HasMany } from 'sequelize-typescript';
 // import { UserProfile } from './user-profile.model'; // Import UserProfile model
 

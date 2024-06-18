@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/CreateUser.dto';
 
 @Injectable()
 export class UsersService {
+  updateUser: any;
   constructor(
     @InjectModel(User)
     private readonly userModel: typeof User,
@@ -17,7 +18,6 @@ export class UsersService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     return this.userModel.create(createUserDto);
   }
-
   async findOne(id: string): Promise<User> {
     return this.userModel.findOne({ where: { id } });
   }
@@ -27,9 +27,8 @@ export class UsersService {
       where: { id },
       returning: true,
     });
-    return [numberOfAffectedRows, affectedRows as unknown as User[]]; // Adjust the type here if necessary
+    return [numberOfAffectedRows, affectedRows as unknown as User[]];
   }
-
   async delete(id: string): Promise<void> {
     const user = await this.findOne(id);
     await user.destroy();

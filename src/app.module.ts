@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { DatabaseModule } from './database/database.module';
-import { ValidateHeaderMiddleware } from './common/validate-header.middleware';
+// import { ValidateHeaderMiddleware } from './common/validate-header.middleware';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 
 @Module({
@@ -34,8 +34,8 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(ValidateHeaderMiddleware)
-      .forRoutes('*'); // Apply middleware to UsersController
+    // consumer
+    //   .apply(ValidateHeaderMiddleware)
+    //   .forRoutes('*'); // Apply middleware to UsersController
   }
 }
